@@ -1,0 +1,73 @@
+<p>#Spring MVC 4 + freemarker</p>
+<p>##视图解析器
+spring 提供了freemarker 的视图解析器</p>
+<p><code>org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver</code></p>
+<p>可以用AppConfig 继承 WebMvcConfigurerAdapter 实现freemarker的配置 和 视图解析器的设置</p>
+<pre><code>@Configuration
+public class AppConfig extends WebMvcConfigurerAdapter{
+    @Bean(name =&quot;freemarkerConfig&quot;)
+    public FreeMarkerConfigurer freemarkerConfig() {
+        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
+        configurer.setTemplateLoaderPath(&quot;/WEB-INF/views/&quot;);
+        Map&lt;String, Object&gt; map = new HashMap&lt;&gt;();
+        map.put(&quot;xml_escape&quot;, new XmlEscape());
+        configurer.setFreemarkerVariables(map);
+        return configurer;
+    }
+
+    @Override
+    public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
+        configurer.ignoreUnknownPathExtensions(false).defaultContentType(MediaType.TEXT_HTML);
+    }
+    @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        registry.freeMarker();//viewResolvers 配置为freemarker 可以不使用配置文件（使用的是默认的设置）
+        //可以改为配置文件形式 更灵活 在中文情况还是使用配置文件更为稳妥 有乱码问题
+    }
+}
+</code></pre><p>##Controller </p>
+<p>在controller 用 modelandview 时 
+由于 viewresolvers已经设置后缀为某种格式的文件所以<strong><em>不需要加<code>.后缀</code></em></strong></p>
+<pre><code>@Controller
+@RequestMapping(value=&quot;/SSO&quot;)
+public class TestController  {
+
+    @Autowired
+    private Url url;
+
+    @RequestMapping(value = &quot;/test&quot;)
+    public ModelAndView getBlog(ModelAndView mv) {
+        mv.addObject(&quot;blogTitle&quot;, &quot;Freemarker Template Demo using Spring&quot;);
+        mv.addObject(&quot;message&quot;, &quot;Getting started with Freemarker.&lt;br/&gt;Find a Freemarker template demo using Spring.&quot;);
+        mv.addObject(&quot;references&quot;, url.getUrlList());
+        mv.setViewName(&quot;test&quot;);//此处不用加后缀 
+        //mv.setViewName(&quot;test.ftl&quot;) // test.ftl 是错误的
+        return mv;
+    }
+}
+</code></pre><p>##传递参数</p>
+<p>给模板传递参数 参数为空会报错，可以用${paramName!&quot;&quot;}设置默认值
+传递对象 读取格式为$(objectName.feildName)</p>
+<pre><code>    model 类：
+    public class User{
+        private String name;
+        public void setName(String name){
+            this.name=name;
+        }
+        public String getName(){
+            return name;
+        }
+    }
+    controller：
+    @RequestMapping(value = &quot;/test&quot;)
+    public ModelAndView getBlog(ModelAndView mv) {
+        User testUser=new User()
+        testUser.setName(&quot;123&quot;)
+        mv.addObject(&quot;user&quot;,testUser);//模板里使用的是key的值user
+        mv.setViewName(&quot;test&quot;);//此处不用加后缀 
+        //mv.setViewName(&quot;test.ftl&quot;) // test.ftl 是错误的
+        return mv;
+    }
+    模板：
+    ${user.name} // 调用对象的字段
+</code></pre>

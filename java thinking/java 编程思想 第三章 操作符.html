@@ -1,0 +1,84 @@
+<p>#第三章 操作符</p>
+<p>##3.2 使用java的操作符
+    1.java的操作符只能操作基本类型 （<strong><em><code>=</code> <code>!=</code> <code>==</code></em></strong>`这些除外）<br>    2.string类型做特殊的基本类型讲</p>
+<p>##3.3优先级
+    1.string后的+ 会尝试将后面的操作对象转为string类型</p>
+<p>##3.4赋值
+    1.基本类型赋值 不会出现 a=b 修改a 改变b的值
+    2.对象类型赋值 实质是传递引用的地址 会出现 a=b 修改a的字段 b也会变化因为他们的引用同一个对象
+    3.鉴于2这种情况 在方法中传递参数 一定要想清楚是不是拒绝方法体内修改参数对象的信息</p>
+<p>##3.5算术操作符</p>
+<p>###== !=  java中最大的谎言
+    1.== != 对于对象的比较  实质是比较对象的引用，无关值
+    2.equals 特殊实现才能比较两个对象的值内容是否相同，（必须实现比较方法内容，默认实现还是比较引用）
+    3.修改了equals意味着 你应该适当的调整hashcode()方法，否则继承后的 map使用会让你觉得世界的黑暗</p>
+<p>###如何恰当的实现equals方法
+equals 方法的实现讲究技巧。不适当的实现就是一颗不知道时间的定时炸弹。
+    1。是否为null
+    2.是否引用相同
+    3.用于比较的关键值是否相同 （也可能这个是个对象得依赖于该对象的equals方法）
+    4。比较hashcode值是否相等，（建立在hashcode的正确实现）
+    5.坑深需谨慎</p>
+<p>##3.8逻辑运算符
+大名鼎鼎的&amp;&amp;有<code>短路</code>效果 合理的使用短路可以使代码简洁高效</p>
+<p>##3.9直接常量
+    1.16进制的数适用所有整数数据类型 0x开头 后面接0-f
+    2.指数计数法 java默认做double类型处理 需要在后面跟f或d </p>
+<p>##3.9按位操作符
+  与或非 基于bit的预算福 可与=一起适用 
+  <strong><em>或表达式 我做不到-。-！</em></strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:center">表达式</th>
+<th style="text-align:center">值</th>
+<th style="text-align:center">表达式</th>
+<th style="text-align:center">值</th>
+<th style="text-align:center">表达式</th>
+<th style="text-align:center">值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">1&amp;1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1^1</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">!1</td>
+<td style="text-align:center">0</td>
+</tr>
+<tr>
+<td style="text-align:center">1&amp;0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">1^0</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">!0</td>
+<td style="text-align:center">1</td>
+</tr>
+<tr>
+<td style="text-align:center">0&amp;0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">0^1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">nil</td>
+<td style="text-align:center">nil</td>
+</tr>
+<tr>
+<td style="text-align:center">0&amp;1</td>
+<td style="text-align:center">1</td>
+<td style="text-align:center">0^0</td>
+<td style="text-align:center">0</td>
+<td style="text-align:center">nil</td>
+<td style="text-align:center">nil</td>
+</tr>
+</tbody>
+</table>
+<p>##3.10移位運算符
+    1.无符号位右移&gt;&gt;&gt; 无论数都在最高位插0（貌似 java无 有符号类整型的数）
+    2.&lt;&lt;左移 在低位加0 对2 左移乘方(左移相当于乘2) 右移开方</p>
+<p>##3.15类型转换
+    1.对于float to int 会采取截断而不是舍入 例 29.8 =&gt; 29
+    2.在float to int 明显的会有信息丢失 所以必须要有显示的强制转换（int）
+    3.在运算中会有提升现象 即会将小类型提升为表达式中类型最大的那个
+    4.float double boolean 类型不能使用位移运算符
+    5.大数据int 类型的溢出 加 乘 左位移 都须注意</p>
