@@ -5,6 +5,7 @@ gulp.task('markdown', function() {
     return gulp.src('**/*.md')
         .pipe(markdown())
         .pipe(gulp.dest(function(f) {
+            console.log("继续中/n");
             return f.base;
         }));
 });
