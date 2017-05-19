@@ -9,7 +9,7 @@ grammar_cjkRuby: true
 
 # 正文
 
-	hello
+
 
 ----
 
