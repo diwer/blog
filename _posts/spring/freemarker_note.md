@@ -1,12 +1,12 @@
-#Spring MVC 4 + freemarker
+# Spring MVC 4 + freemarker
 
-##视图解析器
+## 视图解析器
 spring 提供了freemarker 的视图解析器
 
 `org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver`
 
 可以用AppConfig 继承 WebMvcConfigurerAdapter 实现freemarker的配置 和 视图解析器的设置
-```
+```java
 @Configuration
 public class AppConfig extends WebMvcConfigurerAdapter{
     @Bean(name ="freemarkerConfig")
@@ -32,10 +32,10 @@ public class AppConfig extends WebMvcConfigurerAdapter{
 
 ```
 
-##Controller 
+## Controller 
 
 在controller 用 modelandview 时 
-由于 viewresolvers已经设置后缀为某种格式的文件所以***不需要加`.后缀`***
+由于 viewresolvers已经设置后缀为某种格式的文件所以 ***不需要加`.后缀`***
 ```
 @Controller
 @RequestMapping(value="/SSO")
@@ -56,11 +56,11 @@ public class TestController  {
 }
 
 ```
-##传递参数
+## 传递参数
 
 给模板传递参数 参数为空会报错，可以用${paramName!""}设置默认值
 传递对象 读取格式为$(objectName.feildName)
-```
+``` java
     model 类：
     public class User{
         private String name;
