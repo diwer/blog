@@ -40,7 +40,7 @@ UNSINGED INT 存储ip地址，通过换出把ip地址转为int值，进行查询
 * innodb的行锁是加在索引上的
 * innoDb的S锁之间共享，S锁和X锁互斥，X锁之间互斥
 * innoDb对于索引列的修改会锁定更多的行
-* 同意资源的锁升级会导致死锁
+* 同一资源的锁升级会导致死锁
 > innodb行级锁并不是直接锁定记录，而是通过索引项加锁实现，这种行锁只有通过索引条件检索数据，才会使用，不用则使用表级锁
 这个特性要注意，否则会有大量锁冲突，影响并发性能。
 > select * from test where name ='张三' for update;
@@ -60,7 +60,7 @@ update * * where teacher_name='test'  全表加入gap锁，其他事无法插入
 行锁防止别的食物修改或删除，Gap锁防止别的事务新增
 
 #### 案例分析
-``` sql
+```sql
 	A:T1 start Transaction
 	B:T2 start Transaction
 	C:T1 delete from `oder` where customer_id=3
@@ -84,6 +84,7 @@ update * * where teacher_name='test'  全表加入gap锁，其他事无法插入
 >脏读：B事务读到A事务中未提交的数据
 >可不重复度：A事务中两次读取同一数据，由于B事务旗舰提交了事务，导致两次结果不一致
 >幻读： 事务A修改表中部分数据，事务B插入数据并提交，事务A发现还有没修改的数据
+
 * 读未提交 read uncommited：所有事务都可以读到其他事务未提交的数据，也成脏读
 * 读已提交 read commited: 事务只能看到已提交的改动。无脏读问题，但有不可重复读和幻读问题；
 * 可重复读 repeatable read：事务读数据数据时这些数据加锁，达到同一个事务多次读取内容结果相同。
