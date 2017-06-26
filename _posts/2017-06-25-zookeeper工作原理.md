@@ -17,6 +17,7 @@ zk的核心是原子广播，这个机制保证了各个server之间的同步，
 1. looking 当前server不知道leader是谁，
 2. leading 当前server被选举为leader
 3. following leader已经被选举出来，与当前server同步
+
 ## 选主流程
 当leader宕机，l或者失去大多数follower，zk进入恢复模式，让所有server恢复到正确状态，选举算法两种，一个钟basic paxos实现，另一种 基于fast paxos算法实现。系统默认的选举算法为fast paxos
 1. 选举线程由当前Server发起选举的线程担任,主要功能是投票结果进行统计，并选出推荐的Server;
@@ -28,6 +29,7 @@ zk的核心是原子广播，这个机制保证了各个server之间的同步，
 server 存活的数量不得少于n+1 server总数必须是2n+1
 
 每个server启动后都会重复以上流程，在恢复模式下，如果是刚从奔溃状态恢复的或者刚启动的server还会从磁盘快照中恢复数据和会话信息，zk惠济路事务日志并定期进行快照，方便在恢复时进行状态恢复，
+
 ## 同步流程
 完成leader选举后进入状态同步过程
 1. leader等待server链接
@@ -35,6 +37,7 @@ server 存活的数量不得少于n+1 server总数必须是2n+1
 3. leader根据follower的zxid确定同步点；
 4. 完成同步后通知follower 已经恒为uptodate状态
 5. follower收到update消息后，又可以重新接受client的请求进行服务
+
 ## leader工作流程
 1. 恢复数据
 2. 维持与learner的心跳，j接收learnner请求并判断learner的请求消息类型；
@@ -43,19 +46,21 @@ server 存活的数量不得少于n+1 server总数必须是2n+1
 >request消息是follower发送的提议信息，包括写请求及同步请求；
 >Ack消息是follwer的对提议的回复，超过半数的follower通过，则commit该提议
 >revlidate消息用来延长session有效时间
-* follower工作流程
+
+## follower工作流程
 1. 向leader发送请求
 2. 接收leader消息并处理
 3. 接收client，如果写请求发送给leader进行投票
 4. 返回client结果
-		> ping消息，心跳信心
-		> proposal消息 leader发起的填，要求follower投票
-		> commit消息 服务器最新一次提案的信息
-		> uptodate消息：表明同步完成 可以接收客户端请求
-		> revalidate消息；根据leader的结果关闭session 或允许接收消息
-		> sync消息：返回sync结果到客户端，这消息最初由客户端发起用来强制得到最新的更新。
-		>follower通过5个线程来实现功能
-## zookeeper引用changjing
+> ping消息，心跳信心
+> proposal消息 leader发起的填，要求follower投票
+> commit消息 服务器最新一次提案的信息
+> uptodate消息：表明同步完成 可以接收客户端请求
+> revalidate消息；根据leader的结果关闭session 或允许接收消息
+> sync消息：返回sync结果到客户端，这消息最初由客户端发起用来强制得到最新的更新。
+>follower通过5个线程来实现功能
+
+## zookeeper引用场景
 ### 配置管理
 集中式的配置管理。保证在配置改变时能够通知集群中的每一个机器、
 通过对zk节点数据的监控，并实现毁掉方法，那么配置的变化就能实时的接收到通知并获取最新配置
@@ -70,6 +75,7 @@ zk所有的读操作getData(),getChildern(),和exists()都可以设置监视(wat
 即客户端只有首先看到了监视事件后，才会感知到它所设置监视的znode发生了变化，网络延迟或者其他因素可能导致不同的客户端在不同的时刻感知某一监视事件，但是不同的客户端所看到的一切具有一致的顺序
 * 被设置watch的数据
 	这个意味着znode节点本身具有不同的改变方式，你也可以想想zookeeper维护了两条监视链表：数据监视和子节点监视。
+
 zk的监视是轻量级的，因此容易设置、维护和分发，当客户端与zk服务端失去联系时，客户端并不会收到监视事件的的通知，只有当客户端重新连接后，若在必要的情况下，以前注册的监视会重新被注册并触发，对于开发人员来说这个通常是透明的
 只有一种情况会导致监视事件的丢失，即通过exists设置某个znode节点的监视，但是如果某个客户端在znode节点被创建和删除的时间间隔内 与zk服务失去了联系，该客户端即使稍后重新链接 zk服务也得不到时间通知
 ## znode访问权限
