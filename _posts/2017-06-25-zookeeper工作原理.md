@@ -17,8 +17,8 @@ zk的核心是原子广播，这个机制保证了各个server之间的同步，
 1. looking 当前server不知道leader是谁，
 2. leading 当前server被选举为leader
 3. following leader已经被选举出来，与当前server同步
-* 选主流程
-	当leader宕机，l或者失去大多数follower，zk进入恢复模式，让所有server恢复到正确状态，选举算法两种，一个钟basic paxos实现，另一种 基于fast paxos算法实现。系统默认的选举算法为fast paxos
+## 选主流程
+当leader宕机，l或者失去大多数follower，zk进入恢复模式，让所有server恢复到正确状态，选举算法两种，一个钟basic paxos实现，另一种 基于fast paxos算法实现。系统默认的选举算法为fast paxos
 1. 选举线程由当前Server发起选举的线程担任,主要功能是投票结果进行统计，并选出推荐的Server;
 2. 玄虚线程先向所有发起一次询问（包括自己）
 3. 选举线程收到回复后，验证是否是自己发起的询问（验证zxid是否一致），然后获取对方的Id(myid)，并存储到当前询问对象列表中，最后获取对方提议的leader相关信息（id，zxid）,并将这些信息存储到当次选举的投票记录表中
@@ -28,14 +28,14 @@ zk的核心是原子广播，这个机制保证了各个server之间的同步，
 server 存活的数量不得少于n+1 server总数必须是2n+1
 
 每个server启动后都会重复以上流程，在恢复模式下，如果是刚从奔溃状态恢复的或者刚启动的server还会从磁盘快照中恢复数据和会话信息，zk惠济路事务日志并定期进行快照，方便在恢复时进行状态恢复，
-* 同步流程
-	完成leader选举后进入状态同步过程
+## 同步流程
+完成leader选举后进入状态同步过程
 1. leader等待server链接
 2. follower链接leader，将最大的zxid发送给leader
 3. leader根据follower的zxid确定同步点；
 4. 完成同步后通知follower 已经恒为uptodate状态
 5. follower收到update消息后，又可以重新接受client的请求进行服务
-* leader工作流程
+## leader工作流程
 1. 恢复数据
 2. 维持与learner的心跳，j接收learnner请求并判断learner的请求消息类型；
 3. learner的消息类型主要有ping消息，request消息，ack消息，revalidate消息，根据不同的消息类型，进行不同的处理
