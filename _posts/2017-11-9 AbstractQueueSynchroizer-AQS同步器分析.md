@@ -100,7 +100,7 @@ AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获�
 	
 
 
-> 超时获取同步状态,有最小自旋超时时间(`sinForTimeoutThreshold`),由于`LockSupport.park()`有可能会发生自己唤醒,所以一般在循环中使用`LockSupport`,当超时获取同步时,会有nanosTimeout作为`park`参数 nanosTimeout-=now-lastTime,当nanosTimeout小于最小自旋时间,将直接进行高速自旋,不会休眠,直到超时中断;
+> 超时获取同步状态,有最小自旋超时时间(`sinForTimeoutThreshold`),由于`LockSupport.park()`有可能会发生自己唤醒,所以一般在循环中使用`LockSupport`,当超时获取同步时,会有nanosTimeout作为`park`参数 nanosTimeout-=now-lastTime,当nanosTimeout小于最小自旋时间,将直接进行高速自旋,不会休眠,直到超时中断抛出异常;
 
 		 
 		
