@@ -17,7 +17,7 @@ AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获�
 *  boolean tryReleaseShared(int arg)
 *  boolean isHeldExclusively()
 ```java
- class Mutex implements Lock, java.io.Serializable {
+ pubic class Mutex implements Lock, java.io.Serializable {
 
    // Our internal helper class
    private static class Sync extends AbstractQueuedSynchronizer {
