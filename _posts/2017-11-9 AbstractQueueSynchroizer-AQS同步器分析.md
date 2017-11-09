@@ -97,6 +97,11 @@ AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获�
 	节点在等待队列中,节点线程等待在`Condition`上,当其他线程对`Condition`调用signal()方法后,该节点将会从等待队列中转义到同步队列中,加入到对同步状态的获取
 	* PROPAGATE -3
 	表示下一次共享式同步状态获取将会无条件传播下去
+	
+
+
+> 超时获取同步状态,有最小自旋超时时间(`sinForTimeoutThreshold`),由于`LockSupport.park()`有可能会发生自己唤醒,所以一般在循环中使用`LockSupport`,当超时获取同步时,会有nanosTimeout作为`park`参数 nanosTimeout-=now-lastTime,当nanosTimeout小于最小自旋时间,将直接进行高速自旋,不会休眠,直到超时中断;
+
 		 
 		
 
