@@ -85,7 +85,7 @@ AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获�
 	* getState(); //获取当前同步状态
 	* setState(); //设置当前同步状态
 	* compareAndSetStatue();//CAS原子操作设置当前状态
-	* 
+	
 * Node
 是构造队列的节点,,节点包含了描述节点状态`waitStatus'
 	
