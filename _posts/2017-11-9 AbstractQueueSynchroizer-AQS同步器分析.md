@@ -8,7 +8,14 @@ grammar_cjkRuby: true
 # AQS分析
 已经有很多人阐述了AQS,作为java并发编程的基础.这里记录下自己的理解
 ## 简述
-AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获取和锁释放`后`的同步框架,也就是说,你只需要继承并重写锁的获取方式和所得释放方式,其他关于同步的一系列操作都已经由该框架实现
+AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获取和锁释放`后`的同步框架
+## 使用
+只需要继承并重写锁的获取方式和所得释放方式,其他关于同步的一系列操作都已经由该框架实现.
+*  boolean tryAcquire(int arg)
+*  boolean tryRelease(int arg)
+*  int tryAcquireShared(int arg)
+*  boolean tryReleaseShared(int arg)
+*  boolean isHeldExclusively()
 ## 关键结构
 作为同步队列,其核心是将争夺资源的线程维护在一个队列里,通过`CAS`操作`state`值,和`LuckSupport`完成锁的语义;
 * state 
