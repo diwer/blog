@@ -81,6 +81,7 @@ AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获�
 作为同步队列,其核心是将争夺资源的线程维护在一个队列里,通过`CAS`操作`state`值,和`LuckSupport`完成锁的语义;
 * state 
 该字段是基于AQS实现锁语义的基础,建立在volatile语义的基础上. 使用`CAS`对state进行原子操作,保障多个线程之间正确的读写.
+
 	* getState(); //获取当前同步状态
 	* setState(); //设置当前同步状态
 	* compareAndSetStatue();//CAS原子操作设置当前状态
