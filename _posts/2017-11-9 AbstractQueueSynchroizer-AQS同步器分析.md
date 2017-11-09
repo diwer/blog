@@ -11,11 +11,11 @@ grammar_cjkRuby: true
 AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获取和锁释放`后`的同步框架
 ## 使用
 只需要继承并重写锁的获取方式和所得释放方式,其他关于同步的一系列操作都已经由该框架实现.
-*  boolean tryAcquire(int arg)
-*  boolean tryRelease(int arg)
-*  int tryAcquireShared(int arg)
-*  boolean tryReleaseShared(int arg)
-*  boolean isHeldExclusively()
+*  boolean tryAcquire(int arg) 独占式
+*  boolean tryRelease(int arg) 独占式
+*  int tryAcquireShared(int arg) 共享式
+*  boolean tryReleaseShared(int arg) 共享式
+*  boolean isHeldExclusively() 判断持有锁线程是不是当前线程
 ```java
  pubic class Mutex implements Lock, java.io.Serializable {
 
