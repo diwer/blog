@@ -16,7 +16,6 @@ grammar_cjkRuby: true
 	
 	* CANCELLED 1		
 	waitStatus中唯一值大于0的存在,表明队列里的线程跟锁毫无关系,在各种处理队列节点中的操作都将其从队列里去除;
-	
 	*  0 
 	初始值
 	* SIGNAL -1
