@@ -16,6 +16,64 @@ AQS是包含了同步队列和等待队列,并实现了建立在自定义锁获�
 *  int tryAcquireShared(int arg)
 *  boolean tryReleaseShared(int arg)
 *  boolean isHeldExclusively()
+```java
+ class Mutex implements Lock, java.io.Serializable {
+
+   // Our internal helper class
+   private static class Sync extends AbstractQueuedSynchronizer {
+     // Reports whether in locked state
+     protected boolean isHeldExclusively() {
+       return getState() == 1;
+     }
+
+     // Acquires the lock if state is zero
+     public boolean tryAcquire(int acquires) {
+       assert acquires == 1; // Otherwise unused
+       if (compareAndSetState(0, 1)) {
+         setExclusiveOwnerThread(Thread.currentThread());
+         return true;
+       }
+       return false;
+     }
+
+     // Releases the lock by setting state to zero
+     protected boolean tryRelease(int releases) {
+       assert releases == 1; // Otherwise unused
+       if (getState() == 0) throw new IllegalMonitorStateException();
+       setExclusiveOwnerThread(null);
+       setState(0);
+       return true;
+     }
+
+     // Provides a Condition
+     Condition newCondition() { return new ConditionObject(); }
+
+     // Deserializes properly
+     private void readObject(ObjectInputStream s)
+         throws IOException, ClassNotFoundException {
+       s.defaultReadObject();
+       setState(0); // reset to unlocked state
+     }
+   }
+
+   // The sync object does all the hard work. We just forward to it.
+   private final Sync sync = new Sync();
+
+   public void lock()                { sync.acquire(1); }
+   public boolean tryLock()          { return sync.tryAcquire(1); }
+   public void unlock()              { sync.release(1); }
+   public Condition newCondition()   { return sync.newCondition(); }
+   public boolean isLocked()         { return sync.isHeldExclusively(); }
+   public boolean hasQueuedThreads() { return sync.hasQueuedThreads(); }
+   public void lockInterruptibly() throws InterruptedException {
+     sync.acquireInterruptibly(1);
+   }
+   public boolean tryLock(long timeout, TimeUnit unit)
+       throws InterruptedException {
+     return sync.tryAcquireNanos(1, unit.toNanos(timeout));
+   }
+ }
+```
 ## 关键结构
 作为同步队列,其核心是将争夺资源的线程维护在一个队列里,通过`CAS`操作`state`值,和`LuckSupport`完成锁的语义;
 * state 
