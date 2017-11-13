@@ -1,6 +1,6 @@
 ---
 title: Spring-aop实现原理
-tags: [spring,aop]
+tags: spring,aop
 date: 2017-06-26
 grammar_cjkRuby: true
 ---
